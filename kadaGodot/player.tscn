@@ -1,10 +1,18 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://animation/with sword/Idle_colored_Sekiro.png" type="Texture" id=1]
+[ext_resource path="res://animation/PLAYER/with sword/idle_animation1.png" type="Texture" id=1]
 [ext_resource path="res://player.gd" type="Script" id=2]
+[ext_resource path="res://animation/PLAYER/with sword/idle_animation2.png" type="Texture" id=3]
+[ext_resource path="res://animation/PLAYER/with sword/idle_animation3.png" type="Texture" id=4]
+[ext_resource path="res://animation/PLAYER/side_slash_attack/side_attack_animation6.png" type="Texture" id=5]
+[ext_resource path="res://animation/PLAYER/side_slash_attack/side_attack_animation1.png" type="Texture" id=6]
+[ext_resource path="res://animation/PLAYER/side_slash_attack/side_attack_animation2.png" type="Texture" id=7]
+[ext_resource path="res://animation/PLAYER/side_slash_attack/side_attack_animation3.png" type="Texture" id=8]
+[ext_resource path="res://animation/PLAYER/side_slash_attack/side_attack_animation4.png" type="Texture" id=9]
+[ext_resource path="res://animation/PLAYER/side_slash_attack/side_attack_animation5.png" type="Texture" id=10]
 
 [sub_resource type="Animation" id=2]
-length = 0.001
+length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
@@ -17,13 +25,41 @@ tracks/0/keys = {
 "update": 0,
 "values": [ 1 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("myAnimateSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "attackAnim"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("myAnimateSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 3, 4, 5, 6, 7, 8 ]
+}
 
 [sub_resource type="Animation" id=3]
 resource_name = "idleAnim"
 length = 0.4
 loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:frame")
+tracks/0/path = NodePath("myAnimateSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -32,26 +68,46 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 0, 1, 2, 3 ]
+"values": [ 0, 1, 2, 2 ]
 }
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 9.97667, 15.5758 )
+extents = Vector2( 12.0127, 15.5758 )
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="AnimationNodeAnimation" id=6]
 
 [node name="player" type="Sprite"]
 position = Vector2( -28, -42 )
 scale = Vector2( 14.7344, 14.7344 )
-texture = ExtResource( 1 )
 hframes = 4
 frame = 1
 script = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 2 )
+anims/attackAnim = SubResource( 5 )
 anims/idleAnim = SubResource( 3 )
 
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 1.0859, 0.509015 )
+position = Vector2( 3.12194, 0.509015 )
 shape = SubResource( 1 )
+
+[node name="myAnimateSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 2.10869, 0.683452 )
+scale = Vector2( 2.21391, 2.21391 )
+frames = SubResource( 4 )
+frame = 1
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 6 )
+anim_player = NodePath("../AnimationPlayer")
